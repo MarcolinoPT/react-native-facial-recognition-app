@@ -1,0 +1,3 @@
+rootProject.name = 'FacialRecognitionApp'
+
+include ':app'
