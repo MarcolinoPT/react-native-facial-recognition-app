@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Camera from "react-native-camera";
-import { addPersonFace } from "./../../actions/api";
+import { trainPersonGroup } from "./../../actions/api";
+import Globals from "./../../config/Globals";
 
 const styles = StyleSheet.create({
     capture: {
@@ -60,13 +61,7 @@ class MainScreen extends Component {
         this.camera
             .capture({ metadata: options })
             .then(data => {
-                console.log(data);
-                console.log(this.props);
-                this.props.addPersonFace(
-                    Globals.personGroupId,
-                    "38069a6e-5e5d-4029-b50e-31b358f2a81d",
-                    data.path
-                );
+                this.props.trainPersonGroup(Globals.personGroupId);
             })
             .catch(err => console.error(err));
     }
@@ -79,5 +74,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-    addPersonFace
+    trainPersonGroup
 })(MainScreen);

@@ -1,3 +1,4 @@
+import React from "react";
 import { AppRegistry } from "react-native";
 import MainScreen from "./src/screens/MainScreen/MainScreen";
 import { Provider } from "react-redux";
