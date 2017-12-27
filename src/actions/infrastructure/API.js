@@ -13,6 +13,12 @@ async function performRequest(request) {
     return await request(requestObject);
 }
 
+export function post(path, params) {
+    return performRequest(requestObject => {
+        return requestObject.post(path, params);
+    });
+}
+
 export function put(path, params) {
     return performRequest(requestObject => {
         return requestObject.put(path, params);

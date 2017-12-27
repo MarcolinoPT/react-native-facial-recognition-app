@@ -1,4 +1,5 @@
 export default (Globals = {
+    personGroupId: "facerecog",
     subscriptionKey: "YOUR_KEY_HERE",
     timeout: 30000,
     urls: {
