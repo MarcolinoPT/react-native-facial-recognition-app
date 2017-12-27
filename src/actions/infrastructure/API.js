@@ -1,16 +1,18 @@
 import axios from "axios";
 import Globals from "./../../config/Globals";
 
-async function performRequest(request) {
-    const options = {
-        baseURL: Globals.urls.apiBase,
-        headers: {
-            "Ocp-Apim-Subscription-Key": Globals.subscriptionKey
-        },
-        timeout: Globals.timeout
+function performRequest(request) {
+    return async function(dispatch) {
+        const options = {
+            baseURL: Globals.urls.apiBase,
+            headers: {
+                "Ocp-Apim-Subscription-Key": Globals.subscriptionKey
+            },
+            timeout: Globals.timeout
+        };
+        const requestObject = axios.create(options);
+        return await request(requestObject);
     };
-    const requestObject = axios.create(options);
-    return await request(requestObject);
 }
 
 export function post(path, params) {

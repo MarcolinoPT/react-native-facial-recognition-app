@@ -1,4 +1,5 @@
+import { addPersonFace } from "./addPersonFace";
 import { createPerson } from "./createPerson";
 import { createPersonGroup } from "./createPersonGroup";
 
-export { createPerson, createPersonGroup };
+export { addPersonFace, createPerson, createPersonGroup };
