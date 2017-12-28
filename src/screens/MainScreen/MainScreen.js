@@ -8,8 +8,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Camera from "react-native-camera";
-import { detect, personGroupTrainingStatus } from "./../../actions/api";
-import Globals from "./../../config/Globals";
+import { login } from "./../../actions/authentication/user";
 
 const styles = StyleSheet.create({
     capture: {
@@ -49,18 +48,10 @@ class MainScreen extends Component {
                     >
                         [CAPTURE]
                     </Text>
-                    <Text style={styles.capture} onPress={this.getStatus}>
-                        [STATUS]
-                    </Text>
                 </Camera>
             </View>
         );
     }
-
-    getStatus = () => {
-        this.props.personGroupTrainingStatus(Globals.personGroupId);
-    };
-
     takePicture() {
         console.log(this.props);
         const options = {};
@@ -69,7 +60,7 @@ class MainScreen extends Component {
             .capture({ metadata: options })
             .then(data => {
                 console.log(data);
-                this.props.detect(data.path);
+                this.props.login(data.path);
             })
             .catch(err => console.error(err));
     }
@@ -83,6 +74,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-    detect,
-    personGroupTrainingStatus
+    login
 })(MainScreen);

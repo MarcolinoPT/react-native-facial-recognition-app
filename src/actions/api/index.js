@@ -1,6 +1,6 @@
 import { addPersonFace } from "./addPersonFace";
 import { createPerson } from "./createPerson";
-import { detect } from "./face";
+import { detect, identify } from "./face";
 import {
     createPersonGroup,
     personGroupTrainingStatus,
@@ -12,6 +12,7 @@ export {
     createPerson,
     createPersonGroup,
     detect,
+    identify,
     personGroupTrainingStatus,
     trainPersonGroup
 };
