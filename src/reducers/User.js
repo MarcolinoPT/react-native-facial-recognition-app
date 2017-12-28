@@ -1,4 +1,4 @@
-import { AUTHORIZED_USER } from "./../actions/api/addPersonFace";
+import { AUTHORIZED_USER } from "./../actions/api/person";
 
 const defaultState = {
     id: undefined
