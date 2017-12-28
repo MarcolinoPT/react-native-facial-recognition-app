@@ -26,3 +26,9 @@ export function put(path, params) {
         return requestObject.put(path, params);
     });
 }
+
+export function get(path) {
+    return performRequest(requestObject => {
+        return requestObject.get(path);
+    });
+}

@@ -8,7 +8,10 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Camera from "react-native-camera";
-import { trainPersonGroup } from "./../../actions/api";
+import {
+    personGroupTrainingStatus,
+    trainPersonGroup
+} from "./../../actions/api";
 import Globals from "./../../config/Globals";
 
 const styles = StyleSheet.create({
@@ -49,10 +52,17 @@ class MainScreen extends Component {
                     >
                         [CAPTURE]
                     </Text>
+                    <Text style={styles.capture} onPress={this.getStatus}>
+                        [STATUS]
+                    </Text>
                 </Camera>
             </View>
         );
     }
+
+    getStatus = () => {
+        this.props.personGroupTrainingStatus(Globals.personGroupId);
+    };
 
     takePicture() {
         console.log(this.props);
@@ -69,10 +79,12 @@ class MainScreen extends Component {
 
 function mapStateToProps(state) {
     return {
+        personGroup: state.personGroup,
         user: state.user
     };
 }
 
 export default connect(mapStateToProps, {
+    personGroupTrainingStatus,
     trainPersonGroup
 })(MainScreen);

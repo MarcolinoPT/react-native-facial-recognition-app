@@ -1,6 +1,15 @@
 import { addPersonFace } from "./addPersonFace";
 import { createPerson } from "./createPerson";
-import { createPersonGroup } from "./createPersonGroup";
-import { trainPersonGroup } from "./trainPersonGroup";
+import {
+    createPersonGroup,
+    personGroupTrainingStatus,
+    trainPersonGroup
+} from "./personGroup";
 
-export { addPersonFace, createPerson, createPersonGroup, trainPersonGroup };
+export {
+    addPersonFace,
+    createPerson,
+    createPersonGroup,
+    personGroupTrainingStatus,
+    trainPersonGroup
+};

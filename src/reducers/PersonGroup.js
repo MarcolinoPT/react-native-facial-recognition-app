@@ -1,7 +1,7 @@
 import {
     PERSON_GROUP_TRAINING_START,
     PERSON_GROUP_TRAINING_START_ERROR
-} from "./../actions/api/trainPersonGroup";
+} from "./../actions/api/personGroup";
 
 const defaultState = {
     isTraining: false,
