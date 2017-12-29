@@ -97,6 +97,12 @@ export function createPerson(personGroupId, name) {
 // https://westus.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f3039523f
 export function getPerson(personGroupId, personId) {
     return async function(dispatch) {
+        const defaultPerson = {
+            personId: undefined,
+            persistedFaceIds: [],
+            name: "J. Doe",
+            userData: undefined
+        };
         const path = `/persongroups/${personGroupId}/persons/${personId}`;
         try {
             const response = await dispatch(get(path));
@@ -104,8 +110,11 @@ export function getPerson(personGroupId, personId) {
                 return response.data;
             } else {
                 // If something unexpected
-                return "Unknown";
+                return defaultPerson;
             }
-        } catch (error) {}
+        } catch (error) {
+            // TODO Dispatch error state to reducer
+            return defaultPerson;
+        }
     };
 }

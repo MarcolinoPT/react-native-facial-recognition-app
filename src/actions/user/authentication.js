@@ -2,8 +2,13 @@ import { detect, identify, getPerson } from "./../api";
 import Globals from "./../../config/Globals";
 import { getPersonId } from "./authentication.helper";
 
+export const AUTHENTICATED_PERSON = "authentication/AUTHENTICATED_PERSON";
+export const AUTHENTICATION_START = "authentication/AUTHENTICATION_START";
+export const AUTHENTICATION_END = "authentication/AUTHENTICATION_END";
+
 export function login(imageCaptured) {
     return async function(dispatch) {
+        dispatch(authenticationStart());
         try {
             const faceIds = await dispatch(detect(imageCaptured));
             if (faceIds && faceIds.length > 0) {
@@ -16,7 +21,9 @@ export function login(imageCaptured) {
                         const person = await dispatch(
                             getPerson(Globals.personGroupId, personId)
                         );
-                        console.log(person.name);
+                        if (person && personId) {
+                            dispatch(authenticatedPerson(person));
+                        }
                     } else {
                         console.log("Person id not found!");
                     }
@@ -28,5 +35,25 @@ export function login(imageCaptured) {
         } catch (error) {
             console.log(error);
         }
+        dispatch(authenticationEnd());
+    };
+}
+
+function authenticationStart() {
+    return {
+        type: AUTHENTICATION_START
+    };
+}
+
+function authenticationEnd() {
+    return {
+        type: AUTHENTICATION_END
+    };
+}
+
+function authenticatedPerson(person) {
+    return {
+        person: person,
+        type: AUTHENTICATED_PERSON
     };
 }
