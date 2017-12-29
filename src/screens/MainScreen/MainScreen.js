@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
     buttonText: {
         color: "#000"
     },
-    container: {
-        flex: 1
-    },
-    preview: {
+    cameraView: {
         alignItems: "center",
         flex: 1,
         justifyContent: "flex-end"
+    },
+    container: {
+        flex: 1
     }
 });
 
@@ -47,9 +47,23 @@ class MainScreen extends Component {
                     ref={cam => {
                         this.camera = cam;
                     }}
-                    style={styles.preview}
+                    style={styles.cameraView}
                     type={"front"}
                 />
+                {this.props.user.isAuthenticated && (
+                    <View
+                        style={{
+                            backgroundColor: "white",
+                            borderRadius: 5,
+                            padding: 3,
+                            position: "absolute",
+                            top: 8,
+                            left: 8
+                        }}
+                    >
+                        <Text>{this.props.user.person.name}</Text>
+                    </View>
+                )}
                 <View
                     style={{
                         alignItems: "center",
@@ -119,29 +133,9 @@ class MainScreen extends Component {
             .then(data => {
                 this.props.login(data.path);
             })
-            .catch(error => {});
-    };
-
-    startDebounceCalls = () => {
-        const options = {};
-        //options.location = ...
-        this.camera
-            .capture({ metadata: options })
-            .then(data => {
-                console.log(data);
-                // this.props.login(data.path);
-                this.props.recognition(data.path);
-            })
-            .catch(err => console.error(err));
-        this.debouncedCall = _.debounce(this.startDebounceCalls, 3000, {
-            maxWait: 3500
-        });
-        this.debouncedCall();
-    };
-
-    endDebounceCalls = () => {
-        console.log("finished", Date.now());
-        this.debouncedCall.cancel();
+            .catch(error => {
+                console.log(error);
+            });
     };
 
     takePicture() {
@@ -152,7 +146,6 @@ class MainScreen extends Component {
             .capture({ metadata: options })
             .then(data => {
                 console.log(data);
-                // this.props.login(data.path);
                 this.props.recognition(data.path);
             })
             .catch(err => console.error(err));
