@@ -9,6 +9,7 @@ import {
 import { connect } from "react-redux";
 import Camera from "react-native-camera";
 import { login } from "./../../actions/authentication/user";
+import { recognition } from "./../../actions/api/emotion";
 
 const styles = StyleSheet.create({
     capture: {
@@ -46,7 +47,7 @@ class MainScreen extends Component {
                         style={styles.capture}
                         onPress={this.takePicture.bind(this)}
                     >
-                        [CAPTURE]
+                        Unlock
                     </Text>
                 </Camera>
             </View>
@@ -60,7 +61,8 @@ class MainScreen extends Component {
             .capture({ metadata: options })
             .then(data => {
                 console.log(data);
-                this.props.login(data.path);
+                // this.props.login(data.path);
+                this.props.recognition(data.path);
             })
             .catch(err => console.error(err));
     }
@@ -74,5 +76,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-    login
+    login,
+    recognition
 })(MainScreen);

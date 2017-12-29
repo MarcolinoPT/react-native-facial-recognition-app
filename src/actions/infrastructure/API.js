@@ -6,7 +6,7 @@ function performRequest(request) {
         const options = {
             baseURL: Globals.urls.apiBase,
             headers: {
-                "Ocp-Apim-Subscription-Key": Globals.subscriptionKey
+                "Ocp-Apim-Subscription-Key": Globals.subscriptionKey.faceAPI
             },
             timeout: Globals.timeout
         };

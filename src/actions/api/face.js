@@ -20,7 +20,8 @@ export function detect(imagePath) {
                 method,
                 url,
                 {
-                    "Ocp-Apim-Subscription-Key": Globals.subscriptionKey,
+                    "Ocp-Apim-Subscription-Key":
+                        Globals.subscriptionKey.faceAPI,
                     "Content-Type": "application/octet-stream"
                 },
                 RNFetchBlob.wrap(imagePath)

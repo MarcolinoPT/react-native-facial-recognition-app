@@ -2,7 +2,6 @@ import { detect, identify, getPerson } from "./../api";
 import Globals from "./../../config/Globals";
 import { getPersonId } from "./user.helper";
 
-// TODO Add login function through captured image from camera
 export function login(imageCaptured) {
     return async function(dispatch) {
         try {

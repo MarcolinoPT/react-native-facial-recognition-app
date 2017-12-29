@@ -1,5 +1,6 @@
-import { addPersonFace, createPerson, getPerson } from "./person";
+import { recognition } from "./emotion";
 import { detect, identify } from "./face";
+import { addPersonFace, createPerson, getPerson } from "./person";
 import {
     createPersonGroup,
     personGroupTrainingStatus,
@@ -14,5 +15,6 @@ export {
     getPerson,
     identify,
     personGroupTrainingStatus,
+    recognition,
     trainPersonGroup
 };
