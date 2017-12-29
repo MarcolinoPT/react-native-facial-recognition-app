@@ -1,6 +1,6 @@
 import { detect, identify, getPerson } from "./../api";
 import Globals from "./../../config/Globals";
-import { getPersonId } from "./user.helper";
+import { getPersonId } from "./authentication.helper";
 
 export function login(imageCaptured) {
     return async function(dispatch) {

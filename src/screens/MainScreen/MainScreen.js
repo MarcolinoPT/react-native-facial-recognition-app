@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Camera from "react-native-camera";
-import { login } from "./../../actions/authentication/user";
-import { recognition } from "./../../actions/api/emotion";
+import _ from "lodash";
+import { recognition } from "./../../actions/api";
 
 const styles = StyleSheet.create({
     capture: {
@@ -37,6 +37,8 @@ class MainScreen extends Component {
             <View style={styles.container}>
                 <Camera
                     aspect={Camera.constants.Aspect.fill}
+                    captureQuality={Camera.constants.CaptureQuality.photo}
+                    captureTarget={Camera.constants.CaptureTarget.temp}
                     ref={cam => {
                         this.camera = cam;
                     }}
@@ -45,14 +47,43 @@ class MainScreen extends Component {
                 >
                     <Text
                         style={styles.capture}
-                        onPress={this.takePicture.bind(this)}
+                        onPress={this.startDebounceCalls}
                     >
-                        Unlock
+                        Start
+                    </Text>
+                    <Text
+                        style={styles.capture}
+                        onPress={this.endDebounceCalls}
+                    >
+                        End
                     </Text>
                 </Camera>
             </View>
         );
     }
+
+    startDebounceCalls = () => {
+        const options = {};
+        //options.location = ...
+        this.camera
+            .capture({ metadata: options })
+            .then(data => {
+                console.log(data);
+                // this.props.login(data.path);
+                this.props.recognition(data.path);
+            })
+            .catch(err => console.error(err));
+        this.debouncedCall = _.debounce(this.startDebounceCalls, 3000, {
+            maxWait: 3500
+        });
+        this.debouncedCall();
+    };
+
+    endDebounceCalls = () => {
+        console.log("finished", Date.now());
+        this.debouncedCall.cancel();
+    };
+
     takePicture() {
         console.log(this.props);
         const options = {};
@@ -76,6 +107,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-    login,
+    // login,
     recognition
 })(MainScreen);
