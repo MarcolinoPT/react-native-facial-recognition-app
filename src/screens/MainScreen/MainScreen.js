@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import {
     ActivityIndicator,
     Dimensions,
+    ImageBackground,
+    Modal,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    Vibration
 } from "react-native";
 import { connect } from "react-redux";
 import Camera from "react-native-camera";
@@ -35,9 +38,34 @@ const styles = StyleSheet.create({
 });
 
 class MainScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            imagePath: undefined,
+            name: undefined,
+            score: 0,
+            showModal: false,
+            timestamp: 0
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // Receive emotion found
+        if (nextProps.emotion.timestamp !== this.state.timestamp) {
+            this.setState({
+                imagePath: nextProps.emotion.imagePath,
+                name: nextProps.emotion.name,
+                score: nextProps.emotion.score,
+                showModal: true,
+                timestamp: nextProps.emotion.timestamp
+            });
+        }
+    }
+
     render() {
         console.log("render");
         console.log(this.props);
+        const imagePath = this.state.imagePath;
         return (
             <View style={styles.container}>
                 <Camera
@@ -64,6 +92,24 @@ class MainScreen extends Component {
                         <Text>{this.props.user.person.name}</Text>
                     </View>
                 )}
+                <Modal
+                    animationType={"fade"}
+                    onRequestClose={() => {
+                        this.setState({ showModal: false }, () => {
+                            console.log(this.state);
+                        });
+                    }}
+                    visible={this.state.showModal}
+                >
+                    <ImageBackground
+                        style={{ flex: 1 }}
+                        source={{ uri: this.state.imagePath }}
+                    >
+                        <Text style={{ color: "red" }}>
+                            {this.state.name} {this.state.score}
+                        </Text>
+                    </ImageBackground>
+                </Modal>
                 <View
                     style={{
                         alignItems: "center",
@@ -71,18 +117,12 @@ class MainScreen extends Component {
                         flex: 0.2
                     }}
                 >
-                    {this.props.user.isAuthenticated === false &&
-                        this.props.user.isAuthenticating === false && (
+                    {this.props.emotion.analyzing === false && (
+                        <View style={{ flexDirection: "row" }}>
                             <TouchableOpacity
                                 style={styles.button}
-                                onPress={this.unlockApp}
+                                onPress={this.readEmotion}
                             >
-                                <Text style={styles.buttonText}>Unlock</Text>
-                            </TouchableOpacity>
-                        )}
-                    {this.props.user.isAuthenticated && (
-                        <View style={{ flexDirection: "row" }}>
-                            <TouchableOpacity style={styles.button}>
                                 <Text style={styles.buttonText}>
                                     Read emotion
                                 </Text>
@@ -95,7 +135,8 @@ class MainScreen extends Component {
                         </View>
                     )}
                 </View>
-                {this.props.user.isAuthenticating === true && (
+                {(this.props.user.isAuthenticating === true ||
+                    this.props.emotion.analyzing === true) && (
                     <View
                         style={{
                             alignItems: "center",
@@ -118,7 +159,7 @@ class MainScreen extends Component {
                             }}
                         >
                             <ActivityIndicator size={"large"} />
-                            <Text>Authenticating, please wait...</Text>
+                            <Text>Please wait...</Text>
                         </View>
                     </View>
                 )}
@@ -138,7 +179,7 @@ class MainScreen extends Component {
             });
     };
 
-    takePicture() {
+    readEmotion = () => {
         console.log(this.props);
         const options = {};
         //options.location = ...
@@ -149,11 +190,12 @@ class MainScreen extends Component {
                 this.props.recognition(data.path);
             })
             .catch(err => console.error(err));
-    }
+    };
 }
 
 function mapStateToProps(state) {
     return {
+        emotion: state.emotion,
         personGroup: state.personGroup,
         user: state.user
     };
