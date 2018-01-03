@@ -5,6 +5,7 @@ import { getPersonId } from "./authentication.helper";
 export const AUTHENTICATED_PERSON = "authentication/AUTHENTICATED_PERSON";
 export const AUTHENTICATION_START = "authentication/AUTHENTICATION_START";
 export const AUTHENTICATION_END = "authentication/AUTHENTICATION_END";
+export const LOGOUT = "authentication/LOGOUT";
 
 export function login(imageCaptured) {
     return async function(dispatch) {
@@ -55,5 +56,13 @@ function authenticatedPerson(person) {
     return {
         person: person,
         type: AUTHENTICATED_PERSON
+    };
+}
+
+export function logout() {
+    return function(dispatch) {
+        dispatch({
+            type: LOGOUT
+        });
     };
 }

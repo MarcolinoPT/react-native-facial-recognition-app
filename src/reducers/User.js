@@ -2,7 +2,8 @@ import { AUTHORIZED_USER } from "./../actions/api/person";
 import {
     AUTHENTICATED_PERSON,
     AUTHENTICATION_END,
-    AUTHENTICATION_START
+    AUTHENTICATION_START,
+    LOGOUT
 } from "./../actions/user/authentication";
 
 const defaultState = {
@@ -38,6 +39,9 @@ export default function(state = defaultState, action) {
                 ...defaultState,
                 id: action.authorizedUserId
             };
+        }
+        case LOGOUT: {
+            return { ...defaultState };
         }
         default: {
             return state;

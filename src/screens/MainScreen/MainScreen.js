@@ -7,14 +7,13 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
-    Vibration
+    View
 } from "react-native";
 import { connect } from "react-redux";
 import Camera from "react-native-camera";
 import _ from "lodash";
 import { recognition } from "./../../actions/api";
-import { login } from "./../../actions/user/authentication";
+import { login, logout } from "./../../actions/user/authentication";
 
 const styles = StyleSheet.create({
     button: {
@@ -61,6 +60,10 @@ class MainScreen extends Component {
             });
         }
     }
+
+    lockApp = () => {
+        this.props.logout();
+    };
 
     render() {
         console.log("render");
@@ -117,23 +120,41 @@ class MainScreen extends Component {
                         flex: 0.2
                     }}
                 >
-                    {this.props.emotion.analyzing === false && (
-                        <View style={{ flexDirection: "row" }}>
-                            <TouchableOpacity
-                                style={styles.button}
-                                onPress={this.readEmotion}
-                            >
-                                <Text style={styles.buttonText}>
-                                    Read emotion
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.button, { marginLeft: 10 }]}
-                            >
-                                <Text style={styles.buttonText}>Lock app</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
+                    {this.props.user.isAuthenticated === false &&
+                        this.props.user.isAuthenticating === false && (
+                            <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                    onPress={this.unlockApp}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        Unlock
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    {this.props.user.isAuthenticated === true &&
+                        this.props.user.isAuthenticating === false &&
+                        this.props.emotion.analyzing === false && (
+                            <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                    onPress={this.readEmotion}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        Read emotion
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.button, { marginLeft: 10 }]}
+                                    onPress={this.lockApp}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        Lock app
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
                 </View>
                 {(this.props.user.isAuthenticating === true ||
                     this.props.emotion.analyzing === true) && (
@@ -203,5 +224,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
     login,
+    logout,
     recognition
 })(MainScreen);
