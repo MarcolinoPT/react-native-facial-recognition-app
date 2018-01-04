@@ -14,6 +14,7 @@ import Camera from "react-native-camera";
 import _ from "lodash";
 import { recognition } from "./../../actions/api";
 import { login, logout } from "./../../actions/user/authentication";
+import RegisterScreen from "./../RegisterScreen/RegisterScreen";
 
 const styles = StyleSheet.create({
     button: {

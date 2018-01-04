@@ -1,4 +1,6 @@
 import { get, post } from "./../infrastructure/API";
+import RNFetchBlob from "react-native-fetch-blob";
+import Globals from "./../../config/Globals";
 
 export const AUTHORIZED_USER = "addPersonFace/AUTHORIZED_USER";
 
@@ -14,30 +16,29 @@ export const AUTHORIZED_USER = "addPersonFace/AUTHORIZED_USER";
 // https://westus.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f3039523b
 export function addPersonFace(personGroupId, personId, faceImagePath) {
     return async function(dispatch) {
+        const method = "POST";
         const path = `/persongroups/${personGroupId}/persons/${personId}/persistedFaces`;
-        const body = {
-            // TODO Change url to dynamic
-            url:
-                "https://media-exp2.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAA3ZAAAAJDhmNWYyMmY4LTUyZDUtNGQ5OS1hNzRiLWJkNjIwMzMyOTljNg.jpg"
-        };
-        try {
-            const response = await dispatch(post(path, body));
-            if (
-                response &&
-                response.status === 200 &&
-                response.data &&
-                response.data.persistedFaceId
-            ) {
-                dispatch(authorizedUser(response.data.persistedFaceId));
-            } else {
-                throw new Error(
-                    `Failed to add face to person id ${personId} from group id ${personGroupId}`
-                );
-            }
-        } catch (error) {
-            console.dir(error.response.data.error.code);
-            // TODO Dispatch an error
-            // dispatch()
+        const url = Globals.urls.apiBase + path;
+        console.log(url);
+        const response = await RNFetchBlob.fetch(
+            method,
+            url,
+            {
+                "Ocp-Apim-Subscription-Key": Globals.subscriptionKey.faceAPI,
+                "Content-Type": "application/octet-stream"
+            },
+            RNFetchBlob.wrap(faceImagePath)
+        );
+        console.log(response);
+        if (
+            response &&
+            response.respInfo &&
+            response.respInfo.status &&
+            response.respInfo.status === 200 &&
+            response.data
+        ) {
+            console.log(response.data);
+            return JSON.parse(response.data).persistedFaceId;
         }
     };
 }
@@ -59,31 +60,28 @@ function authorizedUser(persistedFaceId) {
  */
 // https://westus.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f3039523c
 export function createPerson(personGroupId, name) {
-    return new Promise(async function(fulfill, reject) {
+    return async function(dispatch) {
         const path = `persongroups/${personGroupId}/persons`;
         const body = {
             name: name,
             // Optional field
             userData: "Created through FacialRecognitionApp"
         };
-        try {
-            const response = await post(path, body);
-            if (
-                response &&
-                response.status === 200 &&
-                response.data &&
-                response.data.personId
-            ) {
-                fulfill(response.data.personId);
-            } else {
-                throw new Error(
-                    `Failed to create person ${name} on group ${personGroupId}.`
-                );
-            }
-        } catch (error) {
-            reject(error);
+        const response = await dispatch(post(path, body));
+        console.log(response);
+        if (
+            response &&
+            response.status === 200 &&
+            response.data &&
+            response.data.personId
+        ) {
+            return response.data.personId;
+        } else {
+            throw new Error(
+                `Failed to create person ${name} on group ${personGroupId}.`
+            );
         }
-    });
+    };
 }
 
 /**

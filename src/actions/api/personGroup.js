@@ -63,26 +63,22 @@ function trainingStartError(message) {
  */
 // https://westus.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f30395244
 export function createPersonGroup(groupId) {
-    return new Promise(async function(fulfill, reject) {
+    return async function(dispatch) {
         const path = `/persongroups/${groupId}`;
         const body = {
             name: "My group",
             // Optional
             userData: "Some data for the group"
         };
-        try {
-            const response = await put(path, body);
-            if (response && response.status === 200) {
-                fulfill();
-            } else {
-                throw new Error(
-                    "Failed to create the person group: invalid response."
-                );
-            }
-        } catch (error) {
-            reject(error);
+        const response = await put(path, body);
+        if (response && response.status === 200) {
+            // Does nothing
+        } else {
+            throw new Error(
+                "Failed to create the person group: invalid response."
+            );
         }
-    });
+    };
 }
 
 export function personGroupTrainingStatus(personGroupId) {
@@ -123,6 +119,7 @@ export function personGroupTrainingStatus(personGroupId) {
 
 function personGroupTrainingStatusFailed() {
     return {
+        message: "training failed",
         type: PERSON_GROUP_TRAINING_STATUS_FAILED
     };
 }
