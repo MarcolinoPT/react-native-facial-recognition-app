@@ -69,6 +69,10 @@ class MainScreen extends Component {
     render() {
         console.log("render");
         console.log(this.props);
+        if (this.props.user.isRegistered === false) {
+            return <RegisterScreen />;
+        }
+
         const imagePath = this.state.imagePath;
         return (
             <View style={styles.container}>

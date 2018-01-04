@@ -8,13 +8,13 @@ import {
 import Globals from "./../../config/Globals";
 
 export const USER_CREATE_START = "creation/USER_CREATE_START";
-export const USER_CREATE_FINSIH = "creation/USER_CREATE_FINISH";
+export const USER_CREATE_ERROR = "creation/USER_CREATE_ERROR";
+export const USER_CREATE_SUCCEEDED = "creation/USER_CREATE_SUCCEEDED";
 
 export function createUser(name, images) {
     return async function(dispatch, getState) {
         dispatch(createUserStart());
         try {
-            await dispatch(createPersonGroup(Globals.personGroupId));
             const personId = await dispatch(
                 createPerson(Globals.personGroupId, name)
             );
@@ -33,9 +33,8 @@ export function createUser(name, images) {
         } catch (error) {
             console.log(error);
             // TODO Dispatch delete of group
-            // TODO Dispatch error
+            dispatch(createUserError());
         }
-        dispatch(createUserFinish());
     };
 }
 
@@ -45,9 +44,9 @@ function createUserStart() {
     };
 }
 
-function createUserFinish() {
+function createUserError() {
     return {
-        type: USER_CREATE_FINSIH
+        type: USER_CREATE_ERROR
     };
 }
 
@@ -60,6 +59,14 @@ function getTrainingStatus() {
             setTimeout(() => {
                 dispatch(getTrainingStatus());
             }, interval);
+        } else if (personGroup.trainingSucceeded) {
+            dispatch(createUserSucceeded());
         }
+    };
+}
+
+function createUserSucceeded() {
+    return {
+        type: USER_CREATE_SUCCEEDED
     };
 }

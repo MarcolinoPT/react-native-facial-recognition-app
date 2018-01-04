@@ -5,11 +5,13 @@ import {
     AUTHENTICATION_START,
     LOGOUT
 } from "./../actions/user/authentication";
+import { USER_CREATE_SUCCEEDED } from "./../actions/user/creation";
 
 const defaultState = {
     id: undefined,
     isAuthenticated: false,
     isAuthenticating: false,
+    isRegistered: false,
     person: undefined
 };
 
@@ -19,6 +21,7 @@ export default function(state = defaultState, action) {
             return {
                 ...defaultState,
                 isAuthenticated: true,
+                isRegistered: true,
                 person: action.person
             };
         }
@@ -41,7 +44,16 @@ export default function(state = defaultState, action) {
             };
         }
         case LOGOUT: {
-            return { ...defaultState };
+            return {
+                ...defaultState,
+                isRegistered: true
+            };
+        }
+        case USER_CREATE_SUCCEEDED: {
+            return {
+                ...state,
+                isRegistered: true
+            };
         }
         default: {
             return state;
