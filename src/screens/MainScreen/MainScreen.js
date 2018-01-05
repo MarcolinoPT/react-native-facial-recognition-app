@@ -15,6 +15,7 @@ import _ from "lodash";
 import { recognition } from "./../../actions/api";
 import { login, logout } from "./../../actions/user/authentication";
 import RegisterScreen from "./../RegisterScreen/RegisterScreen";
+import Spinner from "./../../components/Spinner";
 
 const styles = StyleSheet.create({
     button: {
@@ -161,34 +162,12 @@ class MainScreen extends Component {
                             </View>
                         )}
                 </View>
-                {(this.props.user.isAuthenticating === true ||
-                    this.props.emotion.analyzing === true) && (
-                    <View
-                        style={{
-                            alignItems: "center",
-                            backgroundColor: "transparent",
-                            borderRadius: 5,
-                            flex: 1,
-                            justifyContent: "center",
-                            position: "absolute",
-                            left: 0,
-                            top: 0,
-                            bottom: 0,
-                            right: 0
-                        }}
-                    >
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                borderRadius: 5,
-                                padding: 10
-                            }}
-                        >
-                            <ActivityIndicator size={"large"} />
-                            <Text>Please wait...</Text>
-                        </View>
-                    </View>
-                )}
+                <Spinner
+                    visible={
+                        this.props.user.isAuthenticating === true ||
+                        this.props.emotion.analyzing === true
+                    }
+                />
             </View>
         );
     }

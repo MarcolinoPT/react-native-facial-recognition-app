@@ -9,6 +9,7 @@ import {
 import ImagePicker from "react-native-image-picker";
 import { connect } from "react-redux";
 import { createUser } from "./../../actions/user/creation";
+import Spinner from "./../../components/Spinner";
 
 class RegisterScreen extends Component {
     constructor(props) {
@@ -101,6 +102,10 @@ class RegisterScreen extends Component {
                 >
                     <Text>Create user</Text>
                 </TouchableOpacity>
+                <Spinner
+                    visible={this.props.user.isCreating}
+                    backgroundColor={"white"}
+                />
             </View>
         );
     }
@@ -108,7 +113,8 @@ class RegisterScreen extends Component {
 
 function mapStateToProps(state) {
     return {
-        personGroup: state.personGroup
+        personGroup: state.personGroup,
+        user: state.user
     };
 }
 
