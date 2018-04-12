@@ -11,15 +11,16 @@ export function recognition(imagePath) {
     return async function(dispatch) {
         dispatch(emotionFindStart());
         const method = "POST";
-        const url =
-            "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize";
+        const url = `${
+            Globals.urls.apiBase
+        }/detect?returnFaceAttributes=emotion`;
         try {
             const response = await RNFetchBlob.fetch(
                 method,
                 url,
                 {
                     "Ocp-Apim-Subscription-Key":
-                        Globals.subscriptionKey.emotionAPI,
+                        Globals.subscriptionKey.faceAPI,
                     "Content-Type": "application/octet-stream"
                 },
                 RNFetchBlob.wrap(imagePath)
@@ -33,15 +34,22 @@ export function recognition(imagePath) {
                 response.data
             ) {
                 console.log(response.data);
-                const emotions = JSON.parse(response.data);
-                for (const emotion of emotions) {
-                    if (emotion.scores) {
+                const faceInformations = JSON.parse(response.data);
+                for (const faceInformation of faceInformations) {
+                    if (
+                        faceInformation.faceAttributes &&
+                        faceInformation.faceAttributes.emotion
+                    ) {
                         let bestEmotion = {
                             name: undefined,
                             score: 0
                         };
-                        for (let emotionName in emotion.scores) {
-                            const emotionScore = emotion.scores[emotionName];
+                        for (let emotionName in faceInformation.faceAttributes
+                            .emotion) {
+                            const emotionScore =
+                                faceInformation.faceAttributes.emotion[
+                                    emotionName
+                                ];
                             if (emotionScore > bestEmotion.score) {
                                 bestEmotion.name = emotionName;
                                 bestEmotion.score = emotionScore;
